@@ -15,5 +15,5 @@ PROJECT=""
 3. Setup tctl client
  ./tctl.sh
 
-4.install management and control plane
+4. Install management and control plane
  ./mp.sh
