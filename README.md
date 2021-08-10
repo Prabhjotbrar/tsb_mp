@@ -1,6 +1,6 @@
 # tsb_installation
 
-1.update the variable in var.sh
+1. Update  variables in var.sh
 ```
 HUB="<private registry>"
 TSB_PASSWORD="<password>"
@@ -10,7 +10,7 @@ MP_CLUSTER="<<tsb cluster name>>"
 ZONE=""
 PROJECT=""
 ```
-2. Sync the images needed for deployment 
+2. Sync the docker images needed for deployment 
 
 3. Setup tctl client
  ./tctl.sh
