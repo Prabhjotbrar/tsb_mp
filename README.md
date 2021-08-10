@@ -16,4 +16,4 @@ PROJECT=""
  ./tctl.sh
 
 4.install management and control plane
-  ./mp.sh
+ ./mp.sh
