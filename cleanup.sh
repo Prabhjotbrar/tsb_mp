@@ -11,19 +11,19 @@ kubectl -n istio-gateway delete istiooperators.install.istio.io --all
 
 kubectl -n istio-gateway delete deployment --all 
 
-kubectl delete validatingwebhookconfigurations.admissionregistration.k8s.io tsb-operator-data-plane-egress tsb-operator-data-plane-ingress tsb-operator-data-plane-tier1 
+kubectl delete validatingwebhookconfigurations.admissionregistration.k8s.io tsb-operator-data-plane-egress tsb-operator-data-plane-ingress tsb-operator-data-plane-tier1 --ignore-not-found 
 
-kubectl delete mutatingwebhookconfigurations.admissionregistration.k8s.io tsb-operator-data-plane-egress tsb-operator-data-plane-ingress tsb-operator-data-plane-tier1
+kubectl delete mutatingwebhookconfigurations.admissionregistration.k8s.io tsb-operator-data-plane-egress tsb-operator-data-plane-ingress tsb-operator-data-plane-tier1 --ignore-not-found
 
-kubectl delete controlplanes.install.tetrate.io --all --all-namespaces
+kubectl delete controlplanes.install.tetrate.io --all --all-namespaces --ignore-not-found
 
-kubectl delete validatingwebhookconfigurations.admissionregistration.k8s.io tsb-operator-control-plane
+kubectl delete validatingwebhookconfigurations.admissionregistration.k8s.io tsb-operator-control-plane --ignore-not-found
 
-kubectl delete  mutatingwebhookconfigurations.admissionregistration.k8s.io tsb-operator-control-plane
+kubectl delete  mutatingwebhookconfigurations.admissionregistration.k8s.io tsb-operator-control-plane --ignore-not-found
 
-kubectl delete validatingwebhookconfigurations.admissionregistration.k8s.io xcp-edge-istio-system 
+kubectl delete validatingwebhookconfigurations.admissionregistration.k8s.io xcp-edge-istio-system --ignore-not-found
 
-kubectl delete namespace tsb-system xcp-multicluster
+kubectl delete namespace tsb-system xcp-multicluster 
 
 tctl install manifest cluster-operators --registry=dummy | kubectl delete -f - --ignore-not-found
 

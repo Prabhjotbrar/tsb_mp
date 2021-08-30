@@ -1,8 +1,8 @@
 apiVersion: gateway.tsb.tetrate.io/v2
 kind: Group
 metadata:
-  organization: gec
-  tenant: gec
+  organization: tetrate
+  tenant: tetrate
   workspace: bookinfo-ws
   name: bookinfo-gw
 spec:
@@ -14,8 +14,8 @@ spec:
 apiVersion: traffic.tsb.tetrate.io/v2
 kind: Group
 Metadata:
-  organization: gec
-  tenant: gec
+  organization: tetrate
+  tenant: tetrate
   workspace: bookinfo-ws
   name: bookinfo-traffic
 spec:
@@ -27,8 +27,8 @@ spec:
 apiVersion: security.tsb.tetrate.io/v2
 kind: Group
 Metadata:
-  organization: gec
-  tenant: gec
+  organization: tetrate
+  tenant: tetrate
   workspace: bookinfo-ws
   name: bookinfo-security
 spec:
