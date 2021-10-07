@@ -3,7 +3,7 @@
 set -e
 
 
-kubectl delete ingressgateways.install.tetrate.io --all --all-namespaces
+kubectl delete ingressgateways.install.tetrate.io --all --all-namespaces --ignore-not-found
 
 kubectl -n istio-gateway scale deployment tsb-operator-data-plane --replicas=0
 
@@ -39,22 +39,14 @@ kubectl -n tsb delete managementplanes.install.tetrate.io --all
 
 kubectl -n tsb delete deployment tsb-operator-management-plane
 
-kubectl delete \
-    validatingwebhookconfigurations.admissionregistration.k8s.io \
-    tsb-operator-management-plane
-kubectl delete \
-    mutatingwebhookconfigurations.admissionregistration.k8s.io \
-    tsb-operator-management-plane
-kubectl delete \
-    validatingwebhookconfigurations.admissionregistration.k8s.io \
-    xcp-central-tsb
-kubectl delete \
-    mutatingwebhookconfigurations.admissionregistration.k8s.io \
-    xcp-central-tsb
+kubectl delete validatingwebhookconfigurations.admissionregistration.k8s.io tsb-operator-management-plane
+kubectl delete mutatingwebhookconfigurations.admissionregistration.k8s.io tsb-operator-management-plane
 
-tctl install manifest management-plane-operator \
-    --registry=<> | \
-    kubectl delete -f - --ignore-not-found
+kubectl delete validatingwebhookconfigurations.admissionregistration.k8s.io xcp-central-tsb
+
+kubectl delete mutatingwebhookconfigurations.admissionregistration.k8s.io  xcp-central-tsb
+
+tctl install manifest management-plane-operator --registry=gke-istio-test-psb | kubectl delete -f - --ignore-not-found
 kubectl delete clusterrole xcp-operator-central
 kubectl delete clusterrolebinding xcp-operator-central
 
