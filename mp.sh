@@ -19,10 +19,6 @@ fi
 if kubectl -n default wait --for condition=ready --timeout=120s pod/tsb-postgresql-0; then
   echo "Postgres is already installed."
 else
-#  if [ ! -d "$DIRECTORY" ]; then
-#    git clone git@github.com:zalando/postgres-operator.git
-#  fi
-#  cd postgres-operator
   kubectl apply -k github.com/zalando/postgres-operator/manifests
   sleep 20
 #  cd ..
@@ -32,7 +28,7 @@ sed  "s%#SC#%${SC}%g" artifacts/pgsql.yaml.tpl > artifacts/pgsql.yaml
 kubectl apply -f artifacts/pgsql.yaml
 sleep 15
 
-export PG_PASS=$(kubectl get secret -n default tsb-user.acid-minimal-cluster.credentials -o go-template='{{ .data.password | base64decode }}')
+export PG_PASS=$(kubectl get secret -n default tsb-user.acid-minimal-cluster.credentials.postgresql.acid.zalan.do -o go-template='{{ .data.password | base64decode }}')
 echo "PG_PASS=" $PG_PASS
 
 kubectl apply -f https://download.elastic.co/downloads/eck/1.3.0/all-in-one.yaml
@@ -57,6 +53,8 @@ tctl install manifest management-plane-operator \
   --registry $HUB | kubectl apply -f -
 sleep 5
 
+for i in `kubectl get pods -n tsb | grep -i teamsync | awk {'print $1'}`;do kubectl delete pod -n tsb  $i;sleep 4;done
+
 kubectl wait pods --for condition=ready -n tsb --all --timeout=120s
 
 
@@ -75,11 +73,16 @@ sleep 20
 for i in `kubectl get pods -n tsb | grep -i teamsync | awk {'print $1'}`;do kubectl delete pod -n tsb  $i;sleep 4;done
 sleep 20
 kubectl wait pods --for condition=ready -n tsb --all --timeout=120s 
-sleep 15
+sleep 10
 
 
-kubectl create job -n tsb teamsync-bootstrap --from=cronjob/teamsync
-kubectl wait --for=condition=complete job/teamsync-bootstrap -n tsb
+if ! kubectl get job -n tsb teamsync-bootstrap ; then
+
+  kubectl create job -n tsb teamsync-bootstrap --from=cronjob/teamsync
+
+fi
+sleep 10
+kubectl wait --for=condition=complete job/teamsync-bootstrap -n tsb --timeout=120s
 
 #GKE:   
 MP_ADDRESS=$(kubectl get svc -n tsb envoy -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
@@ -90,17 +93,12 @@ echo -e "Management Plane created successfully. \n address: ${MP_ADDRESS} \n use
 
 sleep 10
 
-gcloud container clusters get-credentials $CLUSTER_NAME --zone $ZONE --project $PROJECT
-
-KUBE_CONTEXT="gke_${PROJECT}_${ZONE}_${CLUSTER_NAME}"
-
-kubectl config use-context ${KUBE_CONTEXT}
 
 MP_ADDRESS=$(kubectl get svc -n tsb envoy -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 export ELASTIC_PASS=$(kubectl get secret -n elastic tsb-es-elastic-user -o go-template='{{ .data.elastic | base64decode }}')
 tctl config clusters set $MP_CLUSTER --bridge-address ${MP_ADDRESS}:8443 --tls-insecure
 
-tctl config profiles set $MP_CLUSTER --cluster $MP_CLUSTER
+tctl config profiles set $MP_CLUSTER --cluster $MP_CLUSTER 
 
 tctl config profiles  set-current $MP_CLUSTER
 

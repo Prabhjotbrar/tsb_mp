@@ -1,0 +1,17 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: d1-xcp-edge-cert
+  namespace: tsb
+spec:
+  secretName: d1-xcp-edge-cert
+  issuerRef:
+    name: xcp-identity-issuer
+    kind: Issuer
+  duration: 30000h
+  isCA: false
+  uris:
+    - spiffe://xcp.tetrate.io/d1
+  usages:
+    - server auth
+    - client auth

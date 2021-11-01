@@ -12,7 +12,7 @@ spec:
       version: 7
       selfSigned: true
   managementPlane:
-    host: 34.69.30.23
+    host: 35.192.74.97
     port: 8443
-    clusterName: cluster-2
+    clusterName: d1
   meshExpansion: {}

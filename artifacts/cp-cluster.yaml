@@ -1,7 +1,7 @@
 apiVersion: api.tsb.tetrate.io/v2
 kind: Cluster
 metadata:
-  name: cluster-2
+  name: d1
   organization: tetrate
 spec:
   tier1Cluster: false
