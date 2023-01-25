@@ -1,0 +1,21 @@
+version: 2.1
+
+workflows:
+  testing:
+    jobs:
+      - runner-test
+
+jobs:
+  runner-test:
+    machine: true
+    resource_class: prabhjotbrar/linux  # Update this to reflect your self-hosted runner resource class details
+    steps:
+      - run: echo "Hi I'm on Runners!"
+      - run: node --version
+      - checkout
+      - run:
+          command: npm install
+          name: Install Node.js app dependencies
+      - run:
+          command: npm run test
+          name: Test app
